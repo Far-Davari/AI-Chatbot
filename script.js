@@ -7,9 +7,9 @@ const userData = {
 };
 
 // Create message element with dynamic classes and return it.
-const createMessageElement = (content, classes) => {
+const createMessageElement = (content, ...classes) => {
   const div = document.createElement("div");
-  div.classList.add("message", classes);
+  div.classList.add("message", ...classes);
   div.innerHTML = content;
   return div;
 };
@@ -29,6 +29,24 @@ const handleOutgoingMessage = (e) => {
   outgoingMessageDiv.querySelector(".message-text").innerText =
     userData.message;
   chatBody.appendChild(outgoingMessageDiv);
+
+  // Simulate bot response with thinking indicator after a delay
+  setTimeout(() => {
+    const messageContent = `<img class="bot-avatar" src="./ChatbotIcon.svg" alt="Chatbot" />
+          <div class="message-text">
+            <div class="thinking-indicator">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+          </div>`;
+    const incomingMessageDiv = createMessageElement(
+      messageContent,
+      "bot-message",
+      "thinking"
+    );
+    chatBody.appendChild(incomingMessageDiv);
+  }, 600);
 };
 
 // Handle Enter key press for sending messages
