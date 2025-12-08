@@ -3,7 +3,7 @@ const messageInput = document.querySelector(".message-input");
 const sendMessgeButton = document.querySelector("#send-message");
 
 // API setup
-const API_KEY = "AIzaSyCPIGRMJDW_XAAjYtV5ERDP8yVSmfHFwjQ";
+const API_KEY = "AIzaSyD1Un9xvsOyvFmKRio9ixsiqURqGJv2Pwk";
 const API_URL = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
 
 const userData = {
@@ -49,6 +49,7 @@ const generateBotResponse = async (incomingMessageDiv) => {
     console.log(error);
   } finally {
     incomingMessageDiv.classList.remove("thinking");
+    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
   }
 };
 
@@ -67,6 +68,7 @@ const handleOutgoingMessage = (e) => {
   outgoingMessageDiv.querySelector(".message-text").innerText =
     userData.message;
   chatBody.appendChild(outgoingMessageDiv);
+  chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
 
   // Simulate bot response with thinking indicator after a delay
   setTimeout(() => {
@@ -83,6 +85,7 @@ const handleOutgoingMessage = (e) => {
       "bot-message",
       "thinking"
     );
+    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
     chatBody.appendChild(incomingMessageDiv);
     generateBotResponse(incomingMessageDiv);
   }, 600);
@@ -97,5 +100,3 @@ messageInput.addEventListener("keydown", (e) => {
 });
 
 sendMessgeButton.addEventListener("click", (e) => handleOutgoingMessage(e));
-
-// 29:20
