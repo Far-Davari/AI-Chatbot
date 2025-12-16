@@ -2,6 +2,7 @@ const chatBody = document.querySelector(".chat-body");
 const messageInput = document.querySelector(".message-input");
 const sendMessgeButton = document.querySelector("#send-message");
 const fileInput = document.querySelector("#file-input");
+const fileUploadWrapper = document.querySelector(".file-upload-wrapper");
 
 // API setup
 const API_KEY = "AIzaSyBTJZbARxoddFRB85BTu4BzBaLcsfVrTrw";
@@ -54,10 +55,13 @@ const generateBotResponse = async (incomingMessageDiv) => {
       .trim();
     messageElement.innerText = apiResponseText;
   } catch (error) {
+    // Handle error in API response
     console.log(error);
     messageElement.innerText = error.message;
     messageElement.style.color = "#ff0000";
   } finally {
+    // Reset user's file data. removing thinking indicator and scroll chat to bottom
+    userData.file = {};
     incomingMessageDiv.classList.remove("thinking");
     chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
   }
@@ -70,7 +74,12 @@ const handleOutgoingMessage = (e) => {
   messageInput.value = "";
 
   // Create and display user message
-  const messageContent = `<div class="message-text"></div>`;
+  const messageContent = `<div class="message-text"></div>
+  ${
+    userData.file.data
+      ? `<img src="data:${userData.file.mime_type};base64,${userData.file.data}" class="attachment" />`
+      : ""
+  }`;
   const outgoingMessageDiv = createMessageElement(
     messageContent,
     "user-message"
@@ -109,13 +118,15 @@ messageInput.addEventListener("keydown", (e) => {
   }
 });
 
-// Handle file input change.
+// Handle file input change and preview the selected file.
 fileInput.addEventListener("change", () => {
   const file = fileInput.files[0];
   if (!file) return;
 
   const reader = new FileReader();
   reader.onload = (e) => {
+    fileUploadWrapper.querySelector("img").src = e.target.result;
+    fileUploadWrapper.classList.add("file-uploaded");
     const base64String = e.target.result.split(",")[1];
 
     // Store file data in userData
